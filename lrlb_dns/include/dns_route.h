@@ -28,7 +28,8 @@ public:
 		pthread_once(&_once,init);
 		return _instance;
 	}
-
+	void connect_db();
+	void build_maps();
 private:
 	//构造函数私有化
 	Route();
@@ -51,4 +52,4 @@ private:
 	pthread_rwlock_t _map_lock; //读写锁
 	
 	
-}
+};

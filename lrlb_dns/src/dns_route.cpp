@@ -1,9 +1,11 @@
-#include <string>
+
 #include <stdlib.h>
 #include <unistd.h>
-#include <lrlb_reactor.h>
+#include <string.h>
+#include <string>
+
+#include "lrlb_reactor.h"
 #include "dns_route.h"
-#include <stirng.h>
 
 using namespace std;
 
@@ -12,7 +14,7 @@ Route * Route::_instance =NULL;
 
 //用于保证创建单例的init方法只执行一次的锁
 
-pthread_once_t Route::_once=PTHRED_ONCE_INIT;
+pthread_once_t Route::_once=PTHREAD_ONCE_INIT;
 
 Route::Route()
 {
@@ -49,9 +51,44 @@ void Route::connect_db()
 
 	if(!mysql_real_connect(&_db_conn,db_host.c_str(),db_user.c_str(),db_passwd.c_str(),db_name.c_str(),db_port,NULL,0))
 	{
-		fprintf(stderr"Failed to connect mysql\n");
+		fprintf(stderr,"Failed to connect mysql\n");
 		exit(1);
 	}
+}
+
+
+void Route::build_maps()
+{
+	int ret=0;
+	snprintf(_sql,1000,"SELECT * FROM RouteData;");
+	ret =mysql_real_query(&_db_conn,_sql,strlen(_sql));
+	if(ret!=0){
+		fprintf(stderr, "failed to find any data, error %s\n", mysql_error(&_db_conn));
+        exit(1);
+	}
+
+	//得到结果集
+	MYSQL_RES * result=mysql_store_result(&_db_conn);
+
+	//得到行数
+	long line_num=mysql_num_rows(result);
+
+	MYSQL_ROW row;
+	for(long i=0;i<line_num;i++){
+		row=mysql_fetch_row(result);
+		int modID=atoi(row[1]);
+		int cmdID=atoi(row[2]);
+		unsigned ip=atoi(row[3]);
+		int port=atoi(row[4]);
+		//组装map的key，有modID/cmdID组合
+		uint64_t key=((uint64_t)modID<<32)+cmdID;
+		uint64_t value=((uint64_t)ip<<32)+port;
+		printf("modID = %d, cmdID = %d, ip = %lu, port = %d\n", modID, cmdID, ip, port);
+
+		//插入到RouterDataMap_A中
+		(*_data_pointer)[key].insert(value);
+	}
+	mysql_free_result(result);
 }
 
 
