@@ -41,6 +41,7 @@ void Route::connect_db()
 	string db_passwd=config_file::instance()->GetString("mysql", "passwd", "110");
 	string db_name = config_file::instance()->GetString("mysql", "name", "lrlb_dns");
 
+	printf("%s,%s,%d,%s,%s\n",db_host.c_str(),db_user.c_str(),db_port,db_passwd.c_str(),db_name.c_str());
 	mysql_init(&_db_conn);
 
 	//超时断开
@@ -93,6 +94,20 @@ void Route::build_maps()
 
 
 
+host_set Route::get_hosts(int modid, int cmdid)
+{
+	host_set hosts;
+	//组装KEY
+	uint64_t key=((uint64_t)modid<<32)+cmdid;
+	pthread_rwlock_rdlock(&_map_lock);
+	route_map_it it = _data_pointer->find(key);
+	 if (it != _data_pointer->end()) {
+        //找到对应的ip + port对
+        hosts = it->second;
+    }
+	pthread_rwlock_unlock(&_map_lock);
+	return hosts;
+}
 
 
 

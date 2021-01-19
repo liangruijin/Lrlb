@@ -146,7 +146,7 @@ void tcp_conn::do_write()
 
 int tcp_conn::send_message(const char * data, int msglen, int msgid)
 {
-	printf("server will send_message: %s:%d, msgid = %d\n", data, msglen, msgid);
+	//printf("server will send_message: %s:%d, msgid = %d\n", data, msglen, msgid);
 	bool active_epollout=false;
 	if(obuf.length()==0){
 		//如果现在已经数据都发送完了，那么是一定要激活写事件的

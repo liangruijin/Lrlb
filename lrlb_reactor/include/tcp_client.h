@@ -30,6 +30,9 @@ public:
 	int do_write();
 	//释放连接资源
 	void clean_conn();
+	int get_fd(){
+		return _sockfd;
+	};
 	~tcp_client();
 	
 	//在第7章设置消息路由之后注释掉

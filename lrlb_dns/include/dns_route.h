@@ -28,6 +28,7 @@ public:
 		pthread_once(&_once,init);
 		return _instance;
 	}
+	host_set get_hosts(int modid,int cmdid);
 	void connect_db();
 	void build_maps();
 private:
