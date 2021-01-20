@@ -2,8 +2,12 @@
 
 #include <pthread.h>
 #include <unordered_set>
+#include <vector>
 #include <unordered_map>
 #include "mysql.h"
+#include "lrlb.pb.h"
+
+//#include "subscribe.h"
 
 //定义用来保存modID/cmdID与 主机IP/port的对应关系
 typedef std::unordered_map<uint64_t,std::unordered_set<uint64_t>> route_map;
@@ -31,6 +35,11 @@ public:
 	host_set get_hosts(int modid,int cmdid);
 	void connect_db();
 	void build_maps();
+	int load_version();
+	int	load_route_data() ;
+	void load_changes(std::vector<uint64_t>& change_list);
+	void remove_changes(bool remove_all);
+	void swap();
 private:
 	//构造函数私有化
 	Route();
@@ -46,7 +55,7 @@ private:
 	//数据库
 	MYSQL _db_conn;  //mysql连接
 	char _sql[1000]; //sql语句
-
+	long _version;
 	//modid/cmdid------->ip/port
 	route_map * _data_pointer;  //指向RouterDataMap_A    当前map
 	route_map * _temp_pointer;  //临时的map
@@ -54,3 +63,7 @@ private:
 	
 	
 };
+
+//backendThread main
+void *check_route_changes(void *args);
+
