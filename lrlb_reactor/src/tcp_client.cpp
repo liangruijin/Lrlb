@@ -235,6 +235,9 @@ tcp_client::tcp_client(event_loop * loop,
 	_msg_callback=NULL;
 	_name =name;
 	_loop=loop;
+	_conn_start_cb=NULL;
+	_conn_close_cb=NULL;
+	
 	bzero(&_server_addr,sizeof _server_addr);
 
 	_server_addr.sin_family=AF_INET;
