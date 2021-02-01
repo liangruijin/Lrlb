@@ -31,8 +31,31 @@ static void init_lb_agent(){
 	config_file::setPath("../conf/lrlb_lb_agent.conf");
 	lb_config.probe_num=config_file::instance()->GetNumber("loadbalance","probe_num",10);
 	lb_config.init_succ_cnt=config_file::instance()->GetNumber("loadbalance","init_succ_cnt",180);
+	lb_config.err_rate = config_file::instance()->GetFloat("loadbalance", "err_rate", 0.1);
+    lb_config.succ_rate = config_file::instance()->GetFloat("loadbalance", "succ_rate", 0.92);
+    lb_config.contin_succ_limit = config_file::instance()->GetNumber("loadbalance", "contin_succ_limit", 10);
+    lb_config.contin_err_limit = config_file::instance()->GetNumber("loadbalance", "contin_err_limit", 10);
+	lb_config.window_err_rate = config_file::instance()->GetFloat("loadbalance", "window_err_rate", 0.7);
+    lb_config.idle_timeout = config_file::instance()->GetNumber("loadbalance", "idle_timeout", 15);
+    lb_config.overload_timeout = config_file::instance()->GetNumber("loadbalance", "overload_timeout", 15);
 	//2.初始化3个route_lb模块
 	create_route_lb();
+
+	//3.加载本地ip
+	char my_host_name[1024];
+	if(gethostname(my_host_name,1024)==0){
+		struct hostent *hd=gethostbyname(my_host_name);
+		if(hd){
+			struct sockaddr_in myaddr;
+			myaddr.sin_addr=*(struct in_addr*)hd->h_addr;
+			lb_config.local_ip=ntohl(myaddr.sin_addr.s_addr);
+		}
+	}
+	if (!lb_config.local_ip)  {
+        struct in_addr inaddr;
+        inet_aton("127.0.0.1", &inaddr);
+        lb_config.local_ip = ntohl(inaddr.s_addr);
+    }
 }
 
 int main(){

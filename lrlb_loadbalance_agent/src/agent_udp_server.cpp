@@ -26,6 +26,13 @@ static void get_host_cb(const char*data,uint32_t len,int msgid,net_connection* n
     printf("rspstring size = %d\n", responseString.size());
 }
 
+static void report_cb(const char* data,uint32_t len,int msgid,net_connection* net_conn,void * user_data){
+	lrlb::ReportRequest req;
+	req.ParseFromArray(data,len);
+	route_lb* ptr_route_lb=(route_lb*)user_data;
+	ptr_route_lb->report_host(req);
+}
+
 void * agent_server_main(void * args){
 	long index=(long) args;
 
@@ -33,8 +40,12 @@ void * agent_server_main(void * args){
 	event_loop loop;
 	udp_server server(&loop,"0.0.0.0",port);
 
-	//todo 给server注册消息分发路由器
+	//给server注册消息分发路由业务, 针对ID_GetHostRequest处理 每个udp拥有一个对应的route_lb
 	server.add_msg_router(lrlb::ID_GetHostRequest,get_host_cb,r_lb[port-8888]);
+	
+    //给server注册消息分发路由业务，针对ID_ReportRequest处理
+    server.add_msg_router(lars::ID_ReportRequest, report_cb, r_lb[port-8888]);
+   
 	
 	printf("agent UDP server:port%d is started ...\n",port);
 

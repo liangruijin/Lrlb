@@ -19,6 +19,9 @@ public:
 	~udp_server();
 	//处理消息业务
 	void do_read();
+	int get_fd(){
+		return _sockfd;
+	}
 private:
 	int _sockfd;
 	char _read_buf[MESSAGE_LENGTH_LIMIT];

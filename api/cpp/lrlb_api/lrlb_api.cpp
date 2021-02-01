@@ -111,3 +111,57 @@ int lrlb_client::get_host(int modid, int cmdid, std :: string & ip, int & port)
 	
 }
 
+
+//lrlb 系统上报host调用信息
+void lrlb_client::report(int modid,int cmdid,const std::string & ip,int port,int retcode)
+{
+	//1 封装上报消息
+	lrlb::ReportRequest req;
+	
+	req.set_modid(modid);
+	req.set_cmdid(cmdid);
+	req.set_retcode(retcode);
+	
+	//1.1 host信息
+	lrlb::HostInfo * hp=req.mutable_host();
+	//ip
+	struct in_addr inaddr;
+	inet_aton(ip.c_str(),&inaddr); //转换成网络字节序
+	int ip_num=inaddr.s_addr;
+	hp->set_ip(ip_num);
+	//port
+	hp->set_port(port);
+	
+	//2. send
+	char write_buf[4096];
+	msg_head head;
+	head.msglen=req.ByteSizeLong();
+	head.msgid=lrlb::ID_GetHostRequest;
+	mencpy(write_buf,&head,MESSAGE_HEAD_LEN);
+	req.SerializeToArray(write_buf+MESSAGE_HEAD_LEN,head.msglen);
+	
+	int index=(cmdid+modid)%3;
+	int ret=sendto(_sockfd[index],write_buf,head.msglen+MESSAGE_HEAD_LEN,0,NULL,0);
+	if(ret==-1){
+		perror("sendto");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

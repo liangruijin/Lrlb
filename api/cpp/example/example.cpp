@@ -21,6 +21,7 @@ int main(int argc,char* argv[]){
 	if(ret==0){
 		cout<<"host is "<<ip<<":"<<port<<endl;
 		//todo 上报结果
+		api.report(modid,cmdid,ip,port,0);
 	}
 	return 0;
 	

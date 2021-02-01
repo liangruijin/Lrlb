@@ -20,6 +20,8 @@ public:
 	int get_host(int modid,int cmdid,lrlb::GetHostResponse & rsp);
 	//根据DNS server返回的结果更新自己的route_lb_map
 	int update_host(int modid,int cmdid,lrlb::GetRouteResponse &rsp);
+	//agent 上报某主机获取结果
+	void report_host(lrlb::ReportRequest req);
 private:
 	route_map _route_lb_map;  //当前route_lb下管理的Loadbalance
 	pthread_mutex_t _mutex;

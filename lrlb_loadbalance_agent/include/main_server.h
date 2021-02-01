@@ -6,8 +6,32 @@
 
 
 struct Config{
-		int probe_num;
-		int init_succ_cnt;
+	int probe_num;
+	int init_succ_cnt;
+	//当idle节点失败率高于此值，节点变overload状态
+    float err_rate;
+
+    //当overload节点成功率高于此值，节点变成idle状态
+    float succ_rate;
+
+    //当idle节点连续失败次数超过此值，节点变成overload状态
+    int contin_err_limit;
+
+    //当overload节点连续成功次数超过此值, 节点变成idle状态
+    int contin_succ_limit;
+	
+	//当前agent本地ip地址(用于上报 填充caller字段)
+    uint32_t local_ip;
+
+	//整个窗口的真实失败率阈值
+    float window_err_rate;
+
+    //对于某个modid/cmdid下的某个idle状态的host，需要清理一次负载信息的周期
+    int idle_timeout;
+
+    //对于某个modid/cmdid/下的某个overload状态的host，在过载队列等待的最大时间
+    int overload_timeout;
+		
 };
 
 

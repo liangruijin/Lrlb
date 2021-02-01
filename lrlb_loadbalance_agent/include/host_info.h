@@ -8,6 +8,8 @@ struct host_info{
 			contin_succ(0),contin_err(0),overload(false)
 	{
 		//初始化构造函数
+		idle_ts = time(NULL);
+		overload_ts= time(NULL);
 	}
 		
 	uint32_t ip; 
@@ -20,6 +22,9 @@ struct host_info{
     uint32_t contin_err;    //连续失败次数
 
 	 bool overload;          //是否过载
+
+	 long idle_ts;
+	 long overload_ts;
 };
 
 
