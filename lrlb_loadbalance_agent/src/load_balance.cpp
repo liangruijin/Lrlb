@@ -80,6 +80,7 @@ int load_balance::pull(){
 //根据dns service 远程返回的结果，更新_host_map
 void load_balance::update(lrlb :: GetRouteResponse & rsp)
 {
+	long current_time=time(NULL);
 	//确保dns service 返回的结果有host信息
 	assert(rsp.host_size()!=0);
 	std::set<uint64_t> remote_hosts;
@@ -134,6 +135,10 @@ void load_balance::update(lrlb :: GetRouteResponse & rsp)
         delete hi;
 		_host_map.erase(key);
     }
+
+	last_update_time=current_time;
+	//重置状态为NEW
+	status=NEW;
 }
 
 void load_balance::report(int ip, int port, int retcode){
@@ -177,7 +182,7 @@ void load_balance::report(int ip, int port, int retcode){
 			saddr.s_addr = htonl(hi->ip);
 		 	 printf("[%d, %d] host %s:%d change overload, succ %u err %u\n", 
                     _modid, _cmdid, inet_ntoa(saddr), hi->port, hi->vsucc, hi->verr);
-			 /设置hi为overload状态 
+			 //设置hi为overload状态 
             hi->set_overload();
 			//移出_idle_list联保，放在overload_list中
 			_idle_list.remove(hi);
@@ -266,9 +271,8 @@ void load_balance::commit()
     if (this->empty() == true) {
         return;
     }
-
     //1. 封装请求消息
-    lrlb::ReportStatusRequest req;
+    lrlb::ReportStatusReq req;
     req.set_modid(_modid);
     req.set_cmdid(_cmdid);
     req.set_ts(time(NULL));
@@ -302,6 +306,15 @@ void load_balance::commit()
 
     //4 发送给report_client 的消息队列
     report_queue->send(req);
+}
+
+//获取当前挂载下的全部host信息 添加到vec中
+void load_balance::get_all_hosts(std::vector<host_info*> &vec)
+{
+    for (host_map_it it = _host_map.begin(); it != _host_map.end(); it++) {
+        host_info *hi = it->second;
+        vec.push_back(hi);
+    }
 }
 
 

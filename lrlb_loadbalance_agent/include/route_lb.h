@@ -18,10 +18,14 @@ public:
 	route_lb(int id);
 	//agent获取一个host主机，将返回的主机结果保存到rsp中
 	int get_host(int modid,int cmdid,lrlb::GetHostResponse & rsp);
+	//agent获取某个modid/cmdid的全部主机，将返回的主机结果存放在rsp中
+	int get_route(int modid, int cmdid, lrlb::GetRouteResponse &rsp);
 	//根据DNS server返回的结果更新自己的route_lb_map
 	int update_host(int modid,int cmdid,lrlb::GetRouteResponse &rsp);
 	//agent 上报某主机获取结果
 	void report_host(lrlb::ReportRequest req);
+	//将全部的load_balance都重置为NEW状态
+	void reset_lb_status();
 private:
 	route_map _route_lb_map;  //当前route_lb下管理的Loadbalance
 	pthread_mutex_t _mutex;

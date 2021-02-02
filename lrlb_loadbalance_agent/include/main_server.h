@@ -6,8 +6,12 @@
 
 
 struct Config{
+	/经过若干次获取请求host节点后，试探选择一次overload过载节点
 	int probe_num;
+	//初始化host_info主机信息访问成功的个数，防止刚启动时少量失败就认为过载
 	int init_succ_cnt;
+	//当idle节点切换至over_load时的初始化失败次数，主要为了累计一定成功次数才能切换会idle
+    int init_err_cnt;
 	//当idle节点失败率高于此值，节点变overload状态
     float err_rate;
 
@@ -31,6 +35,9 @@ struct Config{
 
     //对于某个modid/cmdid/下的某个overload状态的host，在过载队列等待的最大时间
     int overload_timeout;
+
+	//对于每个NEW状态的modid/cmdid，多久更新一下本地路由,秒
+    long update_timeout;
 		
 };
 

@@ -2,6 +2,12 @@
 #include "main_server.h"
 #include <pthread.h>
 
+static void conn_init(net_connection* conn,void *args){
+	for(int i=0;i<3;i++){
+		r_lb[i]->reset_lb_status();
+	}
+}
+
 
 void new_dns_request(event_loop * loop,int fd,void * args){
 	tcp_client* client=(tcp_client*) args;
@@ -9,7 +15,7 @@ void new_dns_request(event_loop * loop,int fd,void * args){
 	std::queue<lrlb::GetRouteRequest> msgs;
 	//2.将数据放在queue队列中
 	dns_queue->recv(msgs);
-	//3。遍历都队列，将clientyjcijiang miege msg发送给report;
+	//3。遍历都队列，将clientyjcijiang miege msg发送给report server;
 	while(msgs.size()){
 		lrlb::GetRouteRequest req=msgs.front();
 		msgs.pop();
@@ -55,7 +61,9 @@ void * dns_client_thread(void* args)
 	//4.设置当前收到dns service回执的消息ID_GetRouteResponse处理函数
 	client.add_msg_router(lrlb::ID_GetRouteResponse,deal_recv_route);
 
-	//4.启动事件监听
+	//5.设置连接成功/连接断开重连成功之后，通过conn_init来清理之前的任务
+	client.set_conn_start(conn_init);
+	//6.启动事件监听
 	loop.event_process();
 #endif
 	return NULL;

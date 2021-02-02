@@ -7,10 +7,10 @@ struct host_info{
 		ip(ip),port(port),vsucc(init_vsucc),verr(0),rsucc(0),rerr(0),
 			contin_succ(0),contin_err(0),overload(false)
 	{
-		//初始化构造函数
-		idle_ts = time(NULL);
-		overload_ts= time(NULL);
 	}
+	void set_idle();
+	void set_overload();
+	bool check_window();
 		
 	uint32_t ip; 
 	int port;

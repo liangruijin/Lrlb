@@ -9,9 +9,11 @@ enum MessageID{
 	ID_GetRouteRequest  =1;  //向DNS请求Route对应的关系的消息ID
 	ID_GetRouteResponse =2;  //DNS回复Route信息的消息ID
 	ID_ReportStatusRequest=3;  //上报host调用状态信息请求消息ID
-	ID_GetHostRequest=4; //api发送请求host信息给lb agent模块的消息ID
-	ID_GetHostResponse=5; //agent回执给API host消息的消息ID	
+	ID_GetHostRequest=4; //api发送请求host信息给lb agent模块的  消息ID
+	ID_GetHostResponse=5; //agent回执给API host消息的   消息ID	
 	ID_ReportRequest =6;  //API report get_host 的调用结果给agent 的消息ID
+	ID_API_GetRouteRequest =7; //API 请求agent某个modid/cmdid的全部hosts信息的route 消息ID
+	ID_API_GetRouteResponse =8;//agent 回执给API的全部host的route信息 消息ID
 }
 
 enum LrlbRetCode{

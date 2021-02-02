@@ -48,7 +48,7 @@ public:
 		msg_callback* callback=_router[msgid];
 		void * user_data =_args[msgid];
 		callback(data,msglen,msgid,net_conn,user_data);
-		printf("=======调用call结束======\n");
+		//printf("=======调用call结束======\n");
 			
 	}
 

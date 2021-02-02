@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <list>
 #include <set>
+#include <vector>
 #include "host_info.h"
 #include "lrlb.pb.h"
 
@@ -35,7 +36,12 @@ public:
 	void report(int ip, int port, int retcode);
 	
 	//提交host的调用结果给远程reporter service上报结果
-	void commit()
+	void commit();
+
+	long last_update_time;
+	
+	//获取当前挂载下的全部host信息 添加到vec中
+	void get_all_hosts(std::vector<host_info*> &vec);
 	
 	//当前load_balance模块的状态
     enum STATUS
