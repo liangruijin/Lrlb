@@ -186,6 +186,13 @@ CPU个数：2个 ， 内存: 2GB , 系统：Ubuntu18.04虚拟机
 | 线程数 | QPS    |
 | :----- | :----- |
 | 1      | 0.5w/s |
-| 2      | 2.2w/s |
-| 10     | 5.5w/s |
-| 100    | 5.3w/s |
+| 2      | 2.1w/s |
+| 10     | 3.2w/s |
+| 100    | 2.7w/s |
+
+## 代码量统计
+
+统计统计 SourceCounter
+
+![0306219bd775d870cdd59bfff58a4f9](https://github.com/liangruijin/Lrlb/blob/master/README.assets/0306219bd775d870cdd59bfff58a4f9.png)
+
