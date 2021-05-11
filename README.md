@@ -10,7 +10,7 @@
 
 其应用场景是针对大型门户网站访问量高的特点，通过弹性负载均衡将用户的访问流量均匀的分发到多个后端云服务器上，确保业务快速平稳的运行。
 
-<img src="C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510175340263.png" alt="image-20210510175340263" style="zoom:67%;" />
+![](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510175340263.png)
 
 ### Lrlb系统总体架构
 
@@ -24,11 +24,11 @@
 
 **DNSService** ： 运行于一台服务器上，负责modid,cmdid到节点路由的转换
 
-![image-20210510201631070](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510201631070.png)
+![image-20210510201631070](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510201631070.png)
 
 **Report Service** ： 运行于DNS Service同机服务器上，负责收集各modid,cmdid下各节点调用状况并将其存储在Mysql数据库中，可用于观察、报警。
 
-![image-20210510202757725](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510202757725.png)
+![image-20210510202757725](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510202757725.png)
 
 **LoadBalance Agent**：运行于每个服务器上，负责**为此服务器上的业务**提供节点获取、节点状态汇报、路由管理、负载调度等核心功能
 
@@ -36,7 +36,7 @@
 
 2.对节点的一次远程调用后，调用结果会**汇报给LB Agent**，以便LB Agent根据自身的LB算法来感知远程服务节点的状态是空闲还是过载，进而控制节点获取时的节点调度
 
-![image-20210510210006969](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510210006969.png)
+![image-20210510210006969](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510210006969.png)
 
 **MYSQL**:至于modid,cmdid的注册、删除可以利用MySQL操作
 
@@ -48,7 +48,7 @@
 
 #### TCP/UDP服务器框架线程模型
 
-![image-20210510124627421](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510124627421.png)
+![image-20210510124627421](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510124627421.png)
 
 
 
@@ -58,7 +58,7 @@
 
 buffer pool的管理方法是利用map类型进行管理，其中Key是每个组内的空间容量，每个key下面挂了一个io_buf链表。每次用户需要取用直接从对应的链表中取出即可. key :int,value:io_buf*
 
-![image-20210510125920380](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510125920380.png)
+![image-20210510125920380](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510125920380.png)
 
 
 
@@ -86,7 +86,7 @@ struct io_event
 
 为了解决服务器在发送接受的消息的TCP传输的粘包问题，我们要将所发的数据做一个规定，采用TLV的格式，来进行封装。
 
-![image-20210510172241122](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510172241122.png)
+![image-20210510172241122](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510172241122.png)
 
 ```cpp
 struct msg_head
@@ -104,7 +104,7 @@ struct msg_head
 
 其中加入msgid的意义就是我们可以甄别是哪个消息，从而对这类消息做出不同的业务处理。但是常规的消息回调是写死了业务的，比如就是"回显业务"、“https报文处理”等等,显然这并不满足我们作为服务器框架的需求。我们需要开发者可以注册自己的回调业务。所以我们需要提供一个注册业务的入口，然后在后端根据不同的msgid来激活不同的回调业务函数。
 
-![image-20210510173910554](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510173910554.png)
+![image-20210510173910554](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510173910554.png)
 
 ```cpp
 class msg_router 
@@ -128,7 +128,7 @@ private:
 
 负载均衡算法，我们称之为是**一个**"load balance", 一个"load balance"对应**针对一组**modID/cmdID下挂在的全部host信息进行负载。**每个"load balance"都会有两个节点队列**。一个队列是"idle_list"，存放目前可用的Host主机信息(ip+port), 一个队列是"overload_list",存放目前已经过载的Host主机信息(ip+port).
 
-![image-20210510212909339](C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510212909339.png)
+![image-20210510212909339](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510212909339.png)
 
 算法流程：
 
@@ -153,7 +153,7 @@ overload_timeout=15 //对于某个modid/cmdid/下的某个overload状态的host�
 window_err_rate=0.7  //整个窗口的真实失败率阈值（只在窗口检查时使用）
 ```
 
-<img src="C:\Users\liangrui\Desktop\Lrlb\README.assets\image-20210510214420636.png" alt="image-20210510214420636" style="zoom:80%;" />
+<img src="https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510214420636.png" alt="image-20210510214420636" style="zoom:80%;" />
 
 agent 请求过程
 
