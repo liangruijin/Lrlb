@@ -212,5 +212,5 @@ CPU个数：2个 ， 内存: 2GB , 系统：Ubuntu18.04虚拟机
 
 统计统计 SourceCounter
 
-![0306219bd775d870cdd59bfff58a4f9](https://github.com/liangruijin/Lrlb/blob/master/README.assets/0306219bd775d870cdd59bfff58a4f9.png)
+![](https://github.com/liangruijin/Lrlb/blob/master/README.assets/0306219bd775d870cdd59bfff58a4f9.png)
 
