@@ -42,9 +42,17 @@
 
 **DNSService** ： 运行于一台服务器上，负责modid,cmdid到节点路由的转换
 
+- 功能一：提供agent获取一个最新的modID/cmdID和真实配置的host的IP和Port的对应关系
+- 功能二：具备订阅和推送最新的modID/cmdID给Agent
+- 功能三：定期的去监控持久性关系表的modID/cmdID和host主机信息的数据，保证版本的更新和最新数据的迭代
+
 ![image-20210510201631070](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510201631070.png)
 
 **Report Service** ： 运行于DNS Service同机服务器上，负责收集各modid,cmdid下各节点调用状况并将其存储在Mysql数据库中，可用于观察、报警。
+
+功能1：Agent将某个host主机(ip,host) 本次的调用结果 发送给report service
+
+功能2：开设一个存储线程池，专门用来处理入库操作
 
 ![image-20210510202757725](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510202757725.png)
 
@@ -172,6 +180,8 @@ window_err_rate=0.7  //整个窗口的真实失败率阈值（只在窗口检查
 ```
 
 <img src="https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510214420636.png" alt="image-20210510214420636" style="zoom:80%;" />
+
+### API开发者使用流程
 
 agent 请求过程
 
