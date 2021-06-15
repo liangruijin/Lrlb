@@ -38,7 +38,7 @@
 
 - cmdid：标识具体服务内容，如：“批量最热小视频”
 
-**API:**业务代码利用modid,cmdid和API就可以找Lrlb系统获取节点、汇报节点调用结果。
+**API**:业务代码利用modid,cmdid和API就可以找Lrlb系统获取节点、汇报节点调用结果。
 
 **DNSService** ： 运行于一台服务器上，负责modid,cmdid到节点路由的转换
 
@@ -78,7 +78,7 @@
 
 
 
-#### 框架中线程池
+#### 框架中内存池
 
 网络框架中，利用了io_buf类来封装基本的buffer结构。然后用一个io_buf pool来管理全部的buffer集合。
 
