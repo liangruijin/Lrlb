@@ -76,7 +76,9 @@
 
 ![image-20210510124627421](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210510124627421.png)
 
+进一步细化：
 
+![image-20210709085916814](https://github.com/liangruijin/Lrlb/blob/master/README.assets/image-20210709085916814.png)
 
 #### 框架中内存池
 
